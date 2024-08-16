@@ -120,4 +120,4 @@ async function hue(){
   
   setInterval(() => {
     hue();
-  }, 20000);
+  }, 1000000);
