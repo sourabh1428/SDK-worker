@@ -58,11 +58,14 @@ async function transferData() {
                     );
 
                     // Insert the entire data into the all_events_done collection
-                    await allEventsCollection.insertOne({
-                        key,
-                        MMID: field,
-                        events
-                    });
+                    for (const event of events) {
+                        await allEventsCollection.insertOne({
+                            key,
+                            MMID: field,
+                            eventName: event.eventName, // Assuming event object has an eventName property
+                            eventTime: event.eventTime  // Assuming event object has an eventTime property
+                        });
+                    }
                 }
 
                 // Clear the Redis key after transferring the data
@@ -86,7 +89,5 @@ async function transferData() {
     }
 }
 
-// // Run the transfer function
-// transferData();
-
+// Export the function
 module.exports = transferData;
