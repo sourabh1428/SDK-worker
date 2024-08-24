@@ -37,7 +37,7 @@ async function getAllCampaigns(){
              let allcampaigns=await client.db('test_db').collection("campaigns");
          
              let data=await allcampaigns.find({}).toArray();
-            console.log(data);
+
                 
              return(data)
             }catch(error){
