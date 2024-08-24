@@ -25,7 +25,6 @@ const client = new MongoClient(uri, {
 async function connectToMongoDB() {
   try {
     await client.connect();
-    console.log("UIS WORKER STARTED!");
   } catch (error) {
     console.error("Error connecting to MongoDB IN THE WORKER OF UIS:", error);
   }

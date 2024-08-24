@@ -1,10 +1,11 @@
-const {hue} = require('./UISrefresh');
+const hue = require('./UISrefresh');
 
-const {transferData}=require('./redisToMongo');
+const transferData=require('./redisToMongo');
 setInterval(()=>{
-    console.log("refresed at "+Date.now()+"ms");
+ 
     transferData();
-    hue();
-    
+    hue(); 
+},6000);
 
-},60000);
+
+

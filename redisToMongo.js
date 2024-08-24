@@ -22,6 +22,8 @@ const dbName = 'test_db';
 const collectionName = 'userEvents'; // Change to your MongoDB collection name
 
 async function transferData() {
+    console.log("Transferring data to mongo....");
+    
   try {
     // Connect to Redis
     await redisClient.connect();
