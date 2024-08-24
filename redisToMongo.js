@@ -57,10 +57,9 @@ async function transferData() {
                         { upsert: true } // If MMID does not exist, create a new document
                     );
 
-                    // Insert the entire data into the all_events_done collection
+                    // Insert each event into the all_events_done collection as separate documents
                     for (const event of events) {
                         await allEventsCollection.insertOne({
-                            key,
                             MMID: field,
                             eventName: event.eventName, // Assuming event object has an eventName property
                             eventTime: event.eventTime  // Assuming event object has an eventTime property
