@@ -17,66 +17,76 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 
-// MongoDB collection
+// MongoDB collections
 const dbName = 'test_db';
-const collectionName = 'userEvents'; // Change to your MongoDB collection name
+const userEventCollectionName = 'userEvent';
+const allEventsCollectionName = 'all_events_done';
 
 async function transferData() {
-    console.log("Transferring data to mongo....");
-    
-  try {
-    // Connect to Redis
-    await redisClient.connect();
+    console.log("Transferring data to MongoDB...");
 
+    try {
+        // Connect to Redis
+        await redisClient.connect();
 
-    // Connect to MongoDB
-    await client.connect();
-   ;
+        // Connect to MongoDB
+        await client.connect();
 
-    const db = client.db(dbName);
-    const collection = db.collection(collectionName);
+        const db = client.db(dbName);
+        const userEventCollection = db.collection(userEventCollectionName);
+        const allEventsCollection = db.collection(allEventsCollectionName);
 
-    // Fetch hash keys from Redis
-    const redisKeys = await redisClient.keys('*'); // Adjust the pattern if needed
+        // Fetch hash keys from Redis
+        const redisKeys = await redisClient.keys('*'); // Adjust the pattern if needed
 
-    for (const key of redisKeys) {
-      // Fetch hash fields and values
-      const hashData = await redisClient.hGetAll(key);
+        for (const key of redisKeys) {
+            // Fetch hash fields and values
+            const hashData = await redisClient.hGetAll(key);
 
-      if (Object.keys(hashData).length > 0) {
-        for (const [field, value] of Object.entries(hashData)) {
-          // Parse events data
-          const events = JSON.parse(value);
+            if (Object.keys(hashData).length > 0) {
+                for (const [field, value] of Object.entries(hashData)) {
+                    // Parse events data
+                    const events = JSON.parse(value);
 
-          // Update or insert the document in MongoDB
-          await collection.updateOne(
-            { MMID: field },
-            { 
-              $push: { events: { $each: events } } 
-            },
-            { upsert: true } // If MMID does not exist, create a new document
-          );
+                    // Update or insert the document in the userEvent collection
+                    await userEventCollection.updateOne(
+                        { MMID: field },
+                        { 
+                            $push: { events: { $each: events } } 
+                        },
+                        { upsert: true } // If MMID does not exist, create a new document
+                    );
 
-        
+                    // Insert the entire data into the all_events_done collection
+                    await allEventsCollection.insertOne({
+                        key,
+                        MMID: field,
+                        events
+                    });
+                }
+
+                // Clear the Redis key after transferring the data
+                await redisClient.del(key);
+                console.log(`Cleared Redis cache for key: ${key}`);
+            }
         }
-      }
-    }
-    console.log("Successfully transferred user events to mongo");
-    
-  } catch (error) {
-    console.error("Error during data transfer:", error);
-  } finally {
-    // Close MongoDB connection
-    await client.close();
 
-    
-    // Close Redis connection
-    await redisClient.quit(); // Use quit() instead of disconnect()
-    
-  }
+        console.log("Successfully transferred data to MongoDB");
+
+    } catch (error) {
+        console.error("Error during data transfer:", error);
+    } finally {
+        // Close MongoDB connection
+        await client.close();
+        console.log("MongoDB connection closed");
+
+        // Close Redis connection
+        await redisClient.quit(); // Use quit() instead of disconnect()
+        console.log("Redis connection closed");
+    }
 }
 
-// Run the transfer function
+// // Run the transfer function
+// transferData();
 
-
-module.exports=transferData;
+module.exports = transferData;
