@@ -24,7 +24,7 @@ const transferData = require('./redisToMongo');
 
 const express = require('express');
 const app = express();
-const port = 4000;
+const port = 3000;
 
 // Keep-alive route
 setInterval(()=>{
