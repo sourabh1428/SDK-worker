@@ -33,7 +33,7 @@ transferData();
 
 
 app.get('/keep-alive', (req, res) => {
-  res.send('I am alive - from worker');
+  res.json({data:'I am alive - from worker'});
 });
 
 // Start the server
