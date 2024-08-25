@@ -24,13 +24,15 @@ const transferData = require('./redisToMongo');
 
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 4000;
 
 // Keep-alive route
-hue();
+setInterval(()=>{
+    hue();
 
-transferData();
+    transferData();
 
+},30000)
 
 app.get('/keep-alive', (req, res) => {
   res.json({data:'I am alive - from worker'});
