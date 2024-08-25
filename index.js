@@ -33,7 +33,9 @@ setInterval(()=>{
     transferData();
 
 },30000)
-
+app.get('/',(req,res)=>{
+    res.json({data:"Home of worker"})
+})
 app.get('/keep-alive', (req, res) => {
   res.json({data:'I am alive - from worker'});
 });
