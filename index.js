@@ -1,3 +1,4 @@
+const { configDotenv } = require('dotenv');
 const hue = require('./UISrefresh');
 const transferData = require('./redisToMongo');
 
@@ -22,6 +23,15 @@ const transferData = require('./redisToMongo');
 // // Start the refresh cycle
 // refreshInterval();
 
+
+
+
+
+
+
+
+
+
 const express = require('express');
 const app = express();
 const port =process.env.PORT || 3000;
@@ -44,3 +54,21 @@ app.get('/keep-alive', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
+
+
+
+// const mongoose = require('mongoose');
+// require('dotenv').config();
+
+// const uri = process.env.MONGODB_URI; 
+// console.log(uri);
+
+
+// // mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+// //   .then(() => {
+// //     console.log('Connected to MongoDB');
+// //   })
+// //   .catch(err => {
+// //     console.error('Failed to connect to MongoDB:', err);
+// //     process.exit(1);
+// //   });

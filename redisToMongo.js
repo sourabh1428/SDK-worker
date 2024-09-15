@@ -4,7 +4,7 @@ require('dotenv').config();
 
 // Redis and MongoDB configuration
 const redisClient = createClient({
-    password: process.env.redis_password,
+    password: process.env.REDIS_PASSWORD,
     socket: {
         host: 'redis-16608.c273.us-east-1-2.ec2.redns.redis-cloud.com',
         port: 16608
